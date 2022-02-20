@@ -15,9 +15,9 @@ def huya(url:str) -> str:
     c = str(b).replace('</script>', '')
     #get the json content and decode it
     jsonContent = json.loads(c)
-    #get the roomValue from the json content
+    #get the roomValue and roomIntroduction from the json content
     roomValue = jsonContent['roomInfo']['tLiveInfo']['tLiveStreamInfo']['vStreamInfo']['value']
-
+    roomIntroduction = jsonContent['roomInfo']['tLiveInfo']['sIntroduction']
     #create a loop to store all cdnType into a list
     cdnTypeList = []
     for i in range(0, 3):
@@ -26,15 +26,15 @@ def huya(url:str) -> str:
         cdnTypeList.append(str(i) + cdnType)
 
     #ask user to input the cdn number
-    cdnNumber = (input(str(cdnTypeList) + 'Please input the cdn type number: '))
+    cdnNumber = (input(roomIntroduction + str(cdnTypeList) + 'Please input the cdn type number: '))
     #get parameter
     sStreamName = roomValue[int(cdnNumber)]['sStreamName']
     sFlvUrl = roomValue[int(cdnNumber)]['sFlvUrl']
     sFlvAntiCode = roomValue[int(cdnNumber)]['sFlvAntiCode']
     
     #conbine the url
-    finalUrl = sFlvUrl + '/' + sStreamName + '.flv?' + sFlvAntiCode
-    
+    finalUrl = sFlvUrl + '/' + sStreamName + '.flv?' + sFlvAntiCode  
+     
     return finalUrl
 
 print(huya('https://m.huya.com/243547'))
