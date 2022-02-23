@@ -16,25 +16,29 @@ def huya(url:str) -> str:
     #get the json content and decode it
     jsonContent = json.loads(c)
     #get the roomValue and roomIntroduction from the json content
-    roomValue = jsonContent['roomInfo']['tLiveInfo']['tLiveStreamInfo']['vStreamInfo']['value']
-    roomIntroduction = jsonContent['roomInfo']['tLiveInfo']['sIntroduction']
-    #create a loop to store all cdnType into a list
-    cdnTypeList = []
-    for i in range(0, 3):
-        cdnType = roomValue[int(i)]['sCdnType']     
-        #store cdnType in cdnTypeList
-        cdnTypeList.append(str(i) + cdnType)
-
-    #ask user to input the cdn number
-    cdnNumber = (input(roomIntroduction + str(cdnTypeList) + 'Please input the cdn type number: '))
-    #get parameter
-    sStreamName = roomValue[int(cdnNumber)]['sStreamName']
-    sFlvUrl = roomValue[int(cdnNumber)]['sFlvUrl']
-    sFlvAntiCode = roomValue[int(cdnNumber)]['sFlvAntiCode']
+    eLiveStatus = jsonContent['roomInfo']['eLiveStatus']
+    if eLiveStatus == 2:
+        roomValue = jsonContent['roomInfo']['tLiveInfo']['tLiveStreamInfo']['vStreamInfo']['value']
+        roomIntroduction = jsonContent['roomInfo']['tLiveInfo']['sIntroduction']
+        #create a loop to store all cdnType into a list
+        cdnTypeList = []
+        for i in range(0, 3):
+            cdnType = roomValue[int(i)]['sCdnType']     
+            #store cdnType in cdnTypeList
+            cdnTypeList.append(str(i) + cdnType)
+        #ask user to input the cdn number
+        cdnNumber = (input(roomIntroduction + str(cdnTypeList) + 'Please input the cdn type number: '))
+        #get parameter
+        sStreamName = roomValue[int(cdnNumber)]['sStreamName']
+        sFlvUrl = roomValue[int(cdnNumber)]['sFlvUrl']
+        sFlvAntiCode = roomValue[int(cdnNumber)]['sFlvAntiCode']
     
-    #conbine the url
-    finalUrl = sFlvUrl + '/' + sStreamName + '.flv?' + sFlvAntiCode  
-     
+        #conbine the url
+        finalUrl = sFlvUrl + '/' + sStreamName + '.flv?' + sFlvAntiCode
+                
+    else:
+        finalUrl = 'Live Unavailable'
+
     return finalUrl
 
 print(huya('https://m.huya.com/243547'))
